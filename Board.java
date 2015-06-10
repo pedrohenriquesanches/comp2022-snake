@@ -16,10 +16,9 @@ public class Board extends JPanel implements ActionListener {
     private Timer timer;
     private Score score;
     Snake cobrinha;
-    
     private boolean isPlaying = false;
-
     private Font font;
+    public static String moverPara = "direita";
        
     public Board() {
 
@@ -73,7 +72,20 @@ public class Board extends JPanel implements ActionListener {
     }
     
     public void actionPerformed(ActionEvent e) {        
-        // move ultimo tecla apertada
+        switch(moverPara){
+            case "esquerda":
+                            cobrinha.move(-1, 0);
+                            break;
+            case "direita":
+                            cobrinha.move(1, 0);
+                            break;
+            case "cima":
+                            cobrinha.move(0, -1);
+                            break;
+            case "baixo":
+                            cobrinha.move(0, 1);
+                            break;
+        }
         repaint();  
     }
     
@@ -91,19 +103,23 @@ public class Board extends JPanel implements ActionListener {
                     break;
                     
                 case KeyEvent.VK_LEFT:
-                    cobrinha.move(-1, 0);
+                    moverPara = "esquerda";
+                    //cobrinha.move(-1, 0);
                     break;
                     
                 case KeyEvent.VK_RIGHT:
-                    cobrinha.move(1, 0);
+                    moverPara = "direita";
+                    //cobrinha.move(1, 0);
                     break;
                     
                 case KeyEvent.VK_UP:
-                    cobrinha.move(0, -1);
+                    moverPara = "cima";
+                    //cobrinha.move(0, -1);
                     break;
                     
                 case KeyEvent.VK_DOWN:
-                    cobrinha.move(0, 1);
+                    moverPara = "baixo";
+                    //cobrinha.move(0, 1);
                     break;
             }
             

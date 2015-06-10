@@ -27,6 +27,12 @@ public class Snake extends JPanel
     }
     
     public void move(int _x, int _y) {
+        if(x == 0){
+            Board.moverPara = "direita";            
+        }
+        if(x == 600){
+            Board.moverPara = "esquerda";            
+        }
         x += _x;
         y += _y;
     }
