@@ -11,7 +11,7 @@ import javax.swing.ImageIcon;
  */
 public class Snake extends JPanel
 {
-    private String snake = "head.png";
+    private String snake = "images/head.png";
 
     private int dx;
     private int dy;
@@ -20,15 +20,15 @@ public class Snake extends JPanel
     private Image image;
     
     public Snake() {
-        ImageIcon ii = new ImageIcon("images/"+this.getClass().getResource(snake));
+        ImageIcon ii = new ImageIcon(this.getClass().getResource(snake));
         image = ii.getImage();
         x = 40;
         y = 60;
     }
     
-    public void move() {
-        x += dx;
-        y += dy;
+    public void move(int _x, int _y) {
+        x += _x;
+        y += _y;
     }
 
     public int getX() {

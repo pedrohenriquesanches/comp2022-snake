@@ -15,6 +15,7 @@ public class Board extends JPanel implements ActionListener {
 
     private Timer timer;
     private Score score;
+    Snake cobrinha;
     
     private boolean isPlaying = false;
 
@@ -29,7 +30,10 @@ public class Board extends JPanel implements ActionListener {
         setBackground(Color.WHITE);
 
         score = new Score();
-        add(score);       
+        add(score);    
+        
+        cobrinha = new Snake();
+        add(cobrinha);
         
         timer = new Timer(5, this);
         timer.start();
@@ -42,7 +46,7 @@ public class Board extends JPanel implements ActionListener {
         score.paintComponent(g);
         
         Graphics2D g2d = (Graphics2D)g;        
-
+        g2d.drawImage(cobrinha.getImage(),cobrinha.getX(),cobrinha.getY(),this);
         Toolkit.getDefaultToolkit().sync();
         g.dispose();
         
@@ -53,6 +57,7 @@ public class Board extends JPanel implements ActionListener {
         if(isPlaying){
             isPlaying = false;
             Graphics2D g2d = (Graphics2D) g;
+            //g2d.drawImage(cobrinha.getImage(),cobrinha.getX(),cobrinha.getY(),this);
             try{
                 File file = new File("fonts/VT323-Regular.ttf");
                 font = Font.createFont(Font.TRUETYPE_FONT, file);
@@ -63,11 +68,12 @@ public class Board extends JPanel implements ActionListener {
             }catch (Exception e){
                 System.out.println(e.toString());
             }   
-            g2d.drawString("S N A K E: " + this.score, 300, 300);
+            g2d.drawString("S N A K E: " + this.score, 300, 300);            
         }
     }
     
     public void actionPerformed(ActionEvent e) {        
+        // move ultimo tecla apertada
         repaint();  
     }
     
@@ -85,17 +91,19 @@ public class Board extends JPanel implements ActionListener {
                     break;
                     
                 case KeyEvent.VK_LEFT:
+                    cobrinha.move(-1, 0);
                     break;
                     
                 case KeyEvent.VK_RIGHT:
+                    cobrinha.move(1, 0);
                     break;
                     
                 case KeyEvent.VK_UP:
-                    score.addScore(10);
+                    cobrinha.move(0, -1);
                     break;
                     
                 case KeyEvent.VK_DOWN:
-                    score.subScore(-10);
+                    cobrinha.move(0, 1);
                     break;
             }
             
