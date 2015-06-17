@@ -11,28 +11,37 @@ import javax.swing.ImageIcon;
  */
 public class Snake extends JPanel
 {
-    private String snake = "images/head.png";
+    private String cabeca = "images/head.png";
 
-    private int dx;
-    private int dy;
+    //private int dx;
+    //private int dy;
+    Snake proxima;
     private int x;
     private int y;
     private Image image;
     
     public Snake() {
-        ImageIcon ii = new ImageIcon(this.getClass().getResource(snake));
+        ImageIcon ii = new ImageIcon(this.getClass().getResource(cabeca));
         image = ii.getImage();
         x = 40;
         y = 60;
     }
     
-    public void move(int _x, int _y) {
-        if(x == 0){
-            Board.moverPara = "direita";            
-        }
-        if(x == 600){
-            Board.moverPara = "esquerda";            
-        }
+    public Snake(int a) {
+        ImageIcon ii = new ImageIcon(this.getClass().getResource(cabeca));
+        image = ii.getImage();
+        x = 60;
+        y = 60;
+    }
+    
+    public Snake(int a, int b) {
+        ImageIcon ii = new ImageIcon(this.getClass().getResource(cabeca));
+        image = ii.getImage();
+        x = 80;
+        y = 60;
+    }
+    
+    public void move(int _x, int _y){
         x += _x;
         y += _y;
     }
@@ -48,5 +57,12 @@ public class Snake extends JPanel
     public Image getImage() {
         return image;
     }
-
+    
+     public void setProxima(Snake _proxima){
+        this.proxima = _proxima;
+    }
+    
+    public Snake getProxima(){
+        return this.proxima;
+    }
 }

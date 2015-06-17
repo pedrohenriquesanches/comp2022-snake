@@ -16,6 +16,9 @@ public class Board extends JPanel implements ActionListener {
     private Timer timer;
     private Score score;
     Snake cobrinha;
+    Snake cobrinha2;
+    Snake cobrinha3;   
+    
     private boolean isPlaying = false;
     private Font font;
     public static String moverPara = "direita";
@@ -32,7 +35,22 @@ public class Board extends JPanel implements ActionListener {
         add(score);    
         
         cobrinha = new Snake();
+        cobrinha2 = new Snake(2);
+        cobrinha3 = new Snake(2,2);
+        
+        cobrinha.setProxima(cobrinha2);
+        cobrinha2.setProxima(cobrinha3);
+        cobrinha3.setProxima(null);
+        //add(cobrinha);
+        //Snake aux = cobrinha;
+        /*do{
+            add(aux);
+            aux = aux.getProxima();
+                
+        }while(aux.getProxima() != null);*/
         add(cobrinha);
+        add(cobrinha2);
+        add(cobrinha3);
         
         timer = new Timer(5, this);
         timer.start();
@@ -44,13 +62,21 @@ public class Board extends JPanel implements ActionListener {
         
         score.paintComponent(g);
         
-        Graphics2D g2d = (Graphics2D)g;        
-        g2d.drawImage(cobrinha.getImage(),cobrinha.getX(),cobrinha.getY(),this);
-        Toolkit.getDefaultToolkit().sync();
-        g.dispose();
+        Graphics2D g2d = (Graphics2D)g;      
+        
+        Snake aux = cobrinha;
+        do{
+            g2d.drawImage(aux.getImage(),aux.getX(),aux.getY(),this);    
+            Toolkit.getDefaultToolkit().sync();
+            g.dispose();
+            aux = aux.getProxima();
+                
+        }while(aux.getProxima() != null);
+        
+        //g2d.drawImage(cobrinha.getImage(),cobrinha.getX(),cobrinha.getY(),this);
+        
         
     }
-
 
     public void paintIntro(Graphics g) {
         if(isPlaying){
@@ -74,21 +100,72 @@ public class Board extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {        
         switch(moverPara){
             case "esquerda":
-                            cobrinha.move(-1, 0);
+                    Snake aux = cobrinha;
+                    do{
+                        aux.move(-1, 0);
+                        aux = aux.getProxima();
+                    }while(aux.getProxima() != null);
+                            //cobrinha.move(-1, 0);
                             break;
             case "direita":
-                            cobrinha.move(1, 0);
+                    aux = cobrinha;
+                    do{
+                        aux.move(1, 0);
+                        aux = aux.getProxima();
+                    }while(aux.getProxima() != null);
+                            //cobrinha.move(1, 0);        while(aux.getProxima() != null);
                             break;
             case "cima":
-                            cobrinha.move(0, -1);
+                    aux = cobrinha;
+                    do{
+                        aux.move(0, -1);
+                        aux = aux.getProxima();
+                    }while(aux.getProxima() != null);
+                            //cobrinha.move(0, -1);
                             break;
             case "baixo":
-                            cobrinha.move(0, 1);
+                    aux = cobrinha;
+                    do{
+                        aux.move(0, 1);
+                        aux = aux.getProxima();
+                    }while(aux.getProxima() != null);
+                            //cobrinha.move(0, 1);
                             break;
         }
         repaint();  
     }
     
+    public int tamanhoCobrinha(){
+        int qtdPosicoes;
+         //se a lista for vazia retorna 0
+        //se não, sabemos que pelo menos uma posição ela tem, partindo desse caso, podemos contar quantas posições tem
+        if(isEmpty()){
+            qtdPosicoes = 0;
+            return qtdPosicoes;
+        }else{
+            qtdPosicoes = 1;
+        }
+        
+        Snake aux = cobrinha;
+        //se o proximo nó do inicio for nulo, quer dizer que temos apenas uma posição, o inicio.
+        if(aux.getProxima() == null){
+            qtdPosicoes = 1;
+        } else {
+            do{
+                aux = aux.getProxima();
+                qtdPosicoes++;
+            }while(aux.getProxima() != null);
+        }
+        return qtdPosicoes;
+    }
+    
+    public boolean isEmpty(){
+        if(cobrinha == null){
+            return true;
+        }else{  
+            return false;
+        }
+    }
     
     private class TAdapter extends KeyAdapter {
 
