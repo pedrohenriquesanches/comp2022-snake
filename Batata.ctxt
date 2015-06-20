@@ -1,0 +1,14 @@
+#BlueJ class context
+comment0.params=
+comment0.target=Batata()
+comment1.params=
+comment1.target=int\ getX()
+comment2.params=
+comment2.target=int\ getY()
+comment3.params=
+comment3.target=java.awt.Image\ getImage()
+comment4.params=
+comment4.target=int\ geradorX()
+comment5.params=
+comment5.target=int\ geradorY()
+numComments=6

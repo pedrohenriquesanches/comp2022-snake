@@ -15,67 +15,59 @@ public class Board extends JPanel implements ActionListener {
 
     private Timer timer;
     private Score score;
-    Snake cobrinha;
-    Snake cobrinha2;
-    Snake cobrinha3;   
-    
+
+    Snake cabeca;
+    Batata frita;
+
     private boolean isPlaying = false;
     private Font font;
     public static String moverPara = "direita";
-       
-    public Board() {
 
+    public Board() {
         addKeyListener(new TAdapter());
-        
+
         setFocusable(true);        
         setDoubleBuffered(true);
         setBackground(Color.WHITE);
 
         score = new Score();
         add(score);    
-        
-        cobrinha = new Snake();
-        cobrinha2 = new Snake(2);
-        cobrinha3 = new Snake(2,2);
-        
-        cobrinha.setProxima(cobrinha2);
-        cobrinha2.setProxima(cobrinha3);
-        cobrinha3.setProxima(null);
-        //add(cobrinha);
-        //Snake aux = cobrinha;
-        /*do{
+
+        cabeca = new Snake();
+        frita =  new Batata();
+
+        //Adicionar cobrinha na tela por partes (SNAKE)
+        Snake aux = cabeca;
+        while(aux.getProxima() != null){
             add(aux);
             aux = aux.getProxima();
-                
-        }while(aux.getProxima() != null);*/
-        add(cobrinha);
-        add(cobrinha2);
-        add(cobrinha3);
-        
+        }
+        //Adicionar Batata Frita na tela (BATATA)
+        add(frita);
+
         timer = new Timer(5, this);
         timer.start();
     }
 
-
     public void paint(Graphics g) {
         super.paint(g);
-        
         score.paintComponent(g);
-        
         Graphics2D g2d = (Graphics2D)g;      
+
+        Snake aux = cabeca;
+        g2d.drawImage(aux.getImage(),aux.getX(),aux.getY(),this);
         
-        Snake aux = cobrinha;
-        do{
-            g2d.drawImage(aux.getImage(),aux.getX(),aux.getY(),this);    
-            Toolkit.getDefaultToolkit().sync();
-            g.dispose();
+        while(aux.getProxima() != null){
+            g2d.drawImage(aux.getImage(),aux.getX(),aux.getY(),this);
             aux = aux.getProxima();
-                
-        }while(aux.getProxima() != null);
+        }
         
-        //g2d.drawImage(cobrinha.getImage(),cobrinha.getX(),cobrinha.getY(),this);
-        
-        
+        //g2d.drawImage(cabeca.getImage(),cabeca.getX(),cabeca.getY(),this);
+
+        g2d.drawImage(frita.getImage(),frita.getX(),frita.getY(),this);
+
+        Toolkit.getDefaultToolkit().sync();
+        g.dispose();
     }
 
     public void paintIntro(Graphics g) {
@@ -96,48 +88,114 @@ public class Board extends JPanel implements ActionListener {
             g2d.drawString("S N A K E: " + this.score, 300, 300);            
         }
     }
-    
+
     public void actionPerformed(ActionEvent e) {        
+        int tamanho = tamanhoCobrinha();
+        int i = 0;
         switch(moverPara){
             case "esquerda":
-                    Snake aux = cobrinha;
-                    do{
-                        aux.move(-1, 0);
-                        aux = aux.getProxima();
-                    }while(aux.getProxima() != null);
-                            //cobrinha.move(-1, 0);
-                            break;
+            Snake aux = cabeca;
+            while(i < tamanho){
+                aux.mover(-1, 0);
+                aux = aux.getProxima();
+                i++;
+            }
+            break;
+
             case "direita":
-                    aux = cobrinha;
-                    do{
-                        aux.move(1, 0);
-                        aux = aux.getProxima();
-                    }while(aux.getProxima() != null);
-                            //cobrinha.move(1, 0);        while(aux.getProxima() != null);
-                            break;
+            aux = cabeca;
+            while(i < tamanho){
+                aux.mover(1, 0);
+                aux = aux.getProxima();
+                i++;
+            }
+            break;
+
             case "cima":
-                    aux = cobrinha;
-                    do{
-                        aux.move(0, -1);
-                        aux = aux.getProxima();
-                    }while(aux.getProxima() != null);
-                            //cobrinha.move(0, -1);
-                            break;
+            aux = cabeca;
+            while(i < tamanho){
+                aux.mover(0, -1);
+                aux = aux.getProxima();
+                i++;
+            }
+            break;
+
             case "baixo":
-                    aux = cobrinha;
-                    do{
-                        aux.move(0, 1);
-                        aux = aux.getProxima();
-                    }while(aux.getProxima() != null);
-                            //cobrinha.move(0, 1);
-                            break;
+            aux = cabeca;
+            while(i < tamanho){
+                aux.mover(0, 1);
+                aux = aux.getProxima();
+                i++;
+            }
+            break;
         }
+
+        //Verifica se relou nas bordas da Frame, para o caso de GAME OVER
+        if((cabeca.getX() == 0) || (cabeca.getX() == 800) || (cabeca.getY() == 0) || (cabeca.getY() == 600)){
+            //g2d.drawString("G A M E   O V E R", 300, 230);
+            System.out.println("game over");
+        }
+
+        //Verifica se a cabeca chegou na mesma posicao da comida, para o caso de alimentar a cobrinha e pontuar no score
+        if((cabeca.getX() == frita.getX()) && (cabeca.getY() == frita.getY())){
+            frita = new Batata();
+            score.addScore(100);
+            aCobrinhaComeu();
+        }
+
         repaint();  
     }
-    
+
+    private class TAdapter extends KeyAdapter {
+        public void keyPressed(KeyEvent e) {
+
+            // Obtém o código da tecla
+            int key =  e.getKeyCode();
+
+            switch (key){
+                case KeyEvent.VK_ENTER:
+                score.addScore(100);
+                break;
+
+                case KeyEvent.VK_LEFT:
+                if(moverPara == "direita"){
+                    break;
+                }else{
+                    moverPara = "esquerda";
+                    break;
+                }
+
+                case KeyEvent.VK_RIGHT:
+                if(moverPara == "esquerda"){
+                    break;
+                }else{
+                    moverPara = "direita";
+                    break;
+                }
+
+                case KeyEvent.VK_UP:
+                if(moverPara == "baixo"){
+                    break;
+                }else{
+                    moverPara = "cima";
+                    break;
+                }
+
+                case KeyEvent.VK_DOWN:
+                if(moverPara == "cima"){
+                    break;
+                }else{
+                    moverPara = "baixo";
+                    break;
+                }
+
+            }
+        }
+    }
+
     public int tamanhoCobrinha(){
         int qtdPosicoes;
-         //se a lista for vazia retorna 0
+        //se a lista for vazia retorna 0
         //se não, sabemos que pelo menos uma posição ela tem, partindo desse caso, podemos contar quantas posições tem
         if(isEmpty()){
             qtdPosicoes = 0;
@@ -145,8 +203,8 @@ public class Board extends JPanel implements ActionListener {
         }else{
             qtdPosicoes = 1;
         }
-        
-        Snake aux = cobrinha;
+
+        Snake aux = cabeca;
         //se o proximo nó do inicio for nulo, quer dizer que temos apenas uma posição, o inicio.
         if(aux.getProxima() == null){
             qtdPosicoes = 1;
@@ -158,49 +216,20 @@ public class Board extends JPanel implements ActionListener {
         }
         return qtdPosicoes;
     }
-    
+
     public boolean isEmpty(){
-        if(cobrinha == null){
+        if(cabeca == null){
             return true;
         }else{  
             return false;
         }
     }
-    
-    private class TAdapter extends KeyAdapter {
 
-        public void keyPressed(KeyEvent e) {
-            
-            // Obtém o código da tecla
-            int key =  e.getKeyCode();
-
-            switch (key){
-                case KeyEvent.VK_ENTER:
-                    score.addScore(100);
-                    break;
-                    
-                case KeyEvent.VK_LEFT:
-                    moverPara = "esquerda";
-                    //cobrinha.move(-1, 0);
-                    break;
-                    
-                case KeyEvent.VK_RIGHT:
-                    moverPara = "direita";
-                    //cobrinha.move(1, 0);
-                    break;
-                    
-                case KeyEvent.VK_UP:
-                    moverPara = "cima";
-                    //cobrinha.move(0, -1);
-                    break;
-                    
-                case KeyEvent.VK_DOWN:
-                    moverPara = "baixo";
-                    //cobrinha.move(0, 1);
-                    break;
-            }
-            
+    public void aCobrinhaComeu(){
+        Snake aux = cabeca;
+        while(aux.getProxima() != null){
+            aux = aux.getProxima();
         }
+        aux.setProxima( new Snake((aux.getX() + 25) , aux.getY()) );
     }
-    
 }
