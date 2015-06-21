@@ -39,11 +39,11 @@ public class Batata extends JPanel
     
     public int geradorX() {
         Random gerador = new Random();
-        return gerador.nextInt(800);
+        return 10+gerador.nextInt(780);
     }
     
     public int geradorY() {
         Random gerador = new Random();
-        return gerador.nextInt(600);
+        return 10+gerador.nextInt(580);
     }
 }

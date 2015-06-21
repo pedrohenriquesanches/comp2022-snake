@@ -20,6 +20,7 @@ public class Board extends JPanel implements ActionListener {
     Batata frita;
 
     private boolean isPlaying = false;
+    private boolean gameOver = false;
     private Font font;
     public static String moverPara = "direita";
 
@@ -53,18 +54,26 @@ public class Board extends JPanel implements ActionListener {
         super.paint(g);
         score.paintComponent(g);
         Graphics2D g2d = (Graphics2D)g;      
-
-        Snake aux = cabeca;
-        g2d.drawImage(aux.getImage(),aux.getX(),aux.getY(),this);
         
-        while(aux.getProxima() != null){
+        //adicionando imagens da cobrinha na tela
+        int i = 0;
+        int tamanho = tamanhoCobrinha();
+        Snake aux = cabeca;
+        while(i < tamanho){
             g2d.drawImage(aux.getImage(),aux.getX(),aux.getY(),this);
             aux = aux.getProxima();
+            i++;
         }
         
-        //g2d.drawImage(cabeca.getImage(),cabeca.getX(),cabeca.getY(),this);
-
+        //adicionando imagem da batata na tela
         g2d.drawImage(frita.getImage(),frita.getX(),frita.getY(),this);
+        
+        //verifica seu deu game over e avisa o usuário
+        if(gameOver){
+            g2d.drawString("G A M E   O V E R ", 270, 280);
+            g2d.drawString("Aperte enter para tentar novamente ", 140, 310);     
+        }
+
 
         Toolkit.getDefaultToolkit().sync();
         g.dispose();
@@ -85,65 +94,69 @@ public class Board extends JPanel implements ActionListener {
             }catch (Exception e){
                 System.out.println(e.toString());
             }   
-            g2d.drawString("S N A K E: " + this.score, 300, 300);            
+            g2d.drawString("S N A K E: " + this.score, 300, 300); 
+            
         }
     }
 
-    public void actionPerformed(ActionEvent e) {        
-        int tamanho = tamanhoCobrinha();
-        int i = 0;
-        switch(moverPara){
-            case "esquerda":
-            Snake aux = cabeca;
-            while(i < tamanho){
-                aux.mover(-1, 0);
-                aux = aux.getProxima();
-                i++;
+    public void actionPerformed(ActionEvent e) {  
+        if(!gameOver){
+            int tamanho = tamanhoCobrinha();
+            int i = 0;
+            switch(moverPara){
+                case "esquerda":
+                Snake aux = cabeca;
+                while(i < tamanho){
+                    aux.mover(-1, 0);
+                    aux = aux.getProxima();
+                    i++;
+                }
+                break;
+    
+                case "direita":
+                aux = cabeca;
+                while(i < tamanho){
+                    aux.mover(1, 0);
+                    aux = aux.getProxima();
+                    i++;
+                }
+                break;
+    
+                case "cima":
+                aux = cabeca;
+                while(i < tamanho){
+                    aux.mover(0, -1);
+                    aux = aux.getProxima();
+                    i++;
+                }
+                break;
+    
+                case "baixo":
+                aux = cabeca;
+                while(i < tamanho){
+                    aux.mover(0, 1);
+                    aux = aux.getProxima();
+                    i++;
+                }
+                break;
             }
-            break;
-
-            case "direita":
-            aux = cabeca;
-            while(i < tamanho){
-                aux.mover(1, 0);
-                aux = aux.getProxima();
-                i++;
+    
+            //Verifica se a cabeca chegou na mesma posicao da comida, para o caso de alimentar a cobrinha e pontuar no score         
+            if(((cabeca.getX() <= frita.getX()+20) && (cabeca.getX() >= frita.getX())) &&
+               ((cabeca.getY() <= frita.getY()+20) && (cabeca.getY() >= frita.getY()))){
+                frita = new Batata();
+                score.addScore(100);
+                aCobrinhaComeu();
             }
-            break;
-
-            case "cima":
-            aux = cabeca;
-            while(i < tamanho){
-                aux.mover(0, -1);
-                aux = aux.getProxima();
-                i++;
+            
+            //Verifica se relou nas bordas da Frame, para o caso de GAME OVER
+            if((cabeca.getX() == 0) || (cabeca.getX() == 800) || (cabeca.getY() == 0) || (cabeca.getY() == 600)){
+                gameOver = true;
+                System.out.println("game over");
             }
-            break;
-
-            case "baixo":
-            aux = cabeca;
-            while(i < tamanho){
-                aux.mover(0, 1);
-                aux = aux.getProxima();
-                i++;
-            }
-            break;
+            
+            repaint();  
         }
-
-        //Verifica se relou nas bordas da Frame, para o caso de GAME OVER
-        if((cabeca.getX() == 0) || (cabeca.getX() == 800) || (cabeca.getY() == 0) || (cabeca.getY() == 600)){
-            //g2d.drawString("G A M E   O V E R", 300, 230);
-            System.out.println("game over");
-        }
-
-        //Verifica se a cabeca chegou na mesma posicao da comida, para o caso de alimentar a cobrinha e pontuar no score
-        if((cabeca.getX() == frita.getX()) && (cabeca.getY() == frita.getY())){
-            frita = new Batata();
-            score.addScore(100);
-            aCobrinhaComeu();
-        }
-
-        repaint();  
     }
 
     private class TAdapter extends KeyAdapter {
@@ -154,7 +167,13 @@ public class Board extends JPanel implements ActionListener {
 
             switch (key){
                 case KeyEvent.VK_ENTER:
-                score.addScore(100);
+                if(gameOver){
+                    gameOver = false;
+                    score = new Score();
+                    cabeca = new Snake();
+                    frita = new Batata();
+                    moverPara = "direita";
+                }
                 break;
 
                 case KeyEvent.VK_LEFT:
@@ -224,12 +243,17 @@ public class Board extends JPanel implements ActionListener {
             return false;
         }
     }
-
+    
+    /*
+     * Método executado quando a cobrinha come a batata
+     * Aumenta a cobrinha
+     * 
+     */
     public void aCobrinhaComeu(){
         Snake aux = cabeca;
         while(aux.getProxima() != null){
             aux = aux.getProxima();
         }
-        aux.setProxima( new Snake((aux.getX() + 25) , aux.getY()) );
+        aux.setProxima( new Snake((aux.getX() + 28) , aux.getY()) );
     }
 }
