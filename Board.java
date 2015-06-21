@@ -142,17 +142,16 @@ public class Board extends JPanel implements ActionListener {
             }
     
             //Verifica se a cabeca chegou na mesma posicao da comida, para o caso de alimentar a cobrinha e pontuar no score         
-            if(((cabeca.getX() <= frita.getX()+20) && (cabeca.getX() >= frita.getX())) &&
-               ((cabeca.getY() <= frita.getY()+20) && (cabeca.getY() >= frita.getY()))){
+            if(((cabeca.getX() <= frita.getX()+35) && (cabeca.getX() >= frita.getX())) &&
+               ((cabeca.getY() <= frita.getY()+35) && (cabeca.getY() >= frita.getY()))){
                 frita = new Batata();
                 score.addScore(100);
                 aCobrinhaComeu();
             }
             
             //Verifica se relou nas bordas da Frame, para o caso de GAME OVER
-            if((cabeca.getX() == 0) || (cabeca.getX() == 800) || (cabeca.getY() == 0) || (cabeca.getY() == 600)){
+            if((cabeca.getX() == 0) || (cabeca.getX() == 780) || (cabeca.getY() == 0) || (cabeca.getY() == 590)){
                 gameOver = true;
-                System.out.println("game over");
             }
             
             repaint();  
