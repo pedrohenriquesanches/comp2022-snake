@@ -29,7 +29,7 @@ public class Board extends JPanel implements ActionListener {
 
         setFocusable(true);        
         setDoubleBuffered(true);
-        setBackground(Color.WHITE);
+        //setBackground(Color.BLACK);
 
         score = new Score();
         add(score);    
@@ -102,12 +102,23 @@ public class Board extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {  
         if(!gameOver){
             int tamanho = tamanhoCobrinha();
-            int i = 0;
+            int i = 0, xAtual, yAtual, aux1 = 28;
             switch(moverPara){
                 case "esquerda":
                 Snake aux = cabeca;
+                int xProximo = aux.getX()-1;
+                int yProximo = aux.getY();
                 while(i < tamanho){
-                    aux.mover(-1, 0);
+                    if(i > 0){
+                        aux1 = 28;
+                    }else{
+                        aux1 = 0;
+                    }
+                    xAtual = aux.getX();
+                    yAtual = aux.getY();
+                    aux.moverPara(xProximo+aux1, yProximo);
+                    xProximo = xAtual;
+                    yProximo = yAtual;
                     aux = aux.getProxima();
                     i++;
                 }
@@ -115,8 +126,19 @@ public class Board extends JPanel implements ActionListener {
     
                 case "direita":
                 aux = cabeca;
+                xProximo = aux.getX()+1;
+                yProximo = aux.getY();
                 while(i < tamanho){
-                    aux.mover(1, 0);
+                    if(i > 0){
+                        aux1 = 28;
+                    }else{
+                        aux1 = 0;
+                    }
+                    xAtual = aux.getX();
+                    yAtual = aux.getY();
+                    aux.moverPara(xProximo-aux1, yProximo);
+                    xProximo = xAtual;
+                    yProximo = yAtual;
                     aux = aux.getProxima();
                     i++;
                 }
@@ -124,8 +146,19 @@ public class Board extends JPanel implements ActionListener {
     
                 case "cima":
                 aux = cabeca;
+                xProximo = aux.getX();
+                yProximo = aux.getY()-1;
                 while(i < tamanho){
-                    aux.mover(0, -1);
+                    if(i > 0){
+                        aux1 = 28;
+                    }else{
+                        aux1 = 0;
+                    }
+                    xAtual = aux.getX();
+                    yAtual = aux.getY();
+                    aux.moverPara(xProximo, yProximo+aux1);
+                    xProximo = xAtual;
+                    yProximo = yAtual;
                     aux = aux.getProxima();
                     i++;
                 }
@@ -133,8 +166,19 @@ public class Board extends JPanel implements ActionListener {
     
                 case "baixo":
                 aux = cabeca;
+                xProximo = aux.getX();
+                yProximo = aux.getY()+1;
                 while(i < tamanho){
-                    aux.mover(0, 1);
+                    if(i > 0){
+                        aux1 = 28;
+                    }else{
+                        aux1 = 0;
+                    }
+                    xAtual = aux.getX();
+                    yAtual = aux.getY();
+                    aux.moverPara(xProximo, yProximo-aux1);
+                    xProximo = xAtual;
+                    yProximo = yAtual;
                     aux = aux.getProxima();
                     i++;
                 }
@@ -150,7 +194,7 @@ public class Board extends JPanel implements ActionListener {
             }
             
             //Verifica se relou nas bordas da Frame, para o caso de GAME OVER
-            if((cabeca.getX() == 0) || (cabeca.getX() == 780) || (cabeca.getY() == 0) || (cabeca.getY() == 590)){
+            if((cabeca.getX() == 0) || (cabeca.getX() == 770) || (cabeca.getY() == 0) || (cabeca.getY() == 570)){
                 gameOver = true;
             }
             

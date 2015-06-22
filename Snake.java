@@ -37,6 +37,11 @@ public class Snake extends JPanel
         x += _x;
         y += _y;
     }
+    
+    public void moverPara(int _x, int _y){
+        x = _x;
+        y = _y;
+    }
 
     public int getX() {
         return x;
