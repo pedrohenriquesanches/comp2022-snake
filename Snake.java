@@ -11,7 +11,7 @@ import javax.swing.ImageIcon;
  */
 public class Snake extends JPanel
 {
-    private String cabeca = "images/head.png";
+    private String cabeca = "images/headDir.png";
     private String corpo = "images/body.png";
 
     Snake proxima;
@@ -53,6 +53,11 @@ public class Snake extends JPanel
 
     public Image getImage() {
         return image;
+    }
+    
+    public void setImage(String head) {
+        ImageIcon ii = new ImageIcon(this.getClass().getResource(head));
+        image = ii.getImage();
     }
     
      public void setProxima(Snake _proxima){

@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import java.io.File;
@@ -23,6 +23,9 @@ public class Board extends JPanel implements ActionListener {
     private boolean gameOver = false;
     private Font font;
     public static String moverPara = "direita";
+//     private String bkg = "images/bkg.jpg";
+//     ImageIcon ii = new ImageIcon(this.getClass().getResource(bkg));
+//     Image image = ii.getImage();
 
     public Board() {
         addKeyListener(new TAdapter());
@@ -46,7 +49,7 @@ public class Board extends JPanel implements ActionListener {
         //Adicionar Batata Frita na tela (BATATA)
         add(frita);
 
-        timer = new Timer(5, this);
+        timer = new Timer(150, this);
         timer.start();
     }
 
@@ -55,6 +58,9 @@ public class Board extends JPanel implements ActionListener {
         score.paintComponent(g);
         Graphics2D g2d = (Graphics2D)g;      
         
+        
+        //g2d.drawImage(image,0,0,this);
+
         //adicionando imagens da cobrinha na tela
         int i = 0;
         int tamanho = tamanhoCobrinha();
@@ -64,16 +70,15 @@ public class Board extends JPanel implements ActionListener {
             aux = aux.getProxima();
             i++;
         }
-        
+
         //adicionando imagem da batata na tela
         g2d.drawImage(frita.getImage(),frita.getX(),frita.getY(),this);
-        
+
         //verifica seu deu game over e avisa o usuário
         if(gameOver){
             g2d.drawString("G A M E   O V E R ", 270, 280);
             g2d.drawString("Aperte enter para tentar novamente ", 140, 310);     
         }
-
 
         Toolkit.getDefaultToolkit().sync();
         g.dispose();
@@ -95,22 +100,23 @@ public class Board extends JPanel implements ActionListener {
                 System.out.println(e.toString());
             }   
             g2d.drawString("S N A K E: " + this.score, 300, 300); 
-            
+
         }
     }
 
     public void actionPerformed(ActionEvent e) {  
         if(!gameOver){
+            Snake aux, aux2;
             int tamanho = tamanhoCobrinha();
             int i = 0, xAtual, yAtual, aux1 = 28;
             switch(moverPara){
                 case "esquerda":
-                Snake aux = cabeca;
-                int xProximo = aux.getX()-1;
+                aux = cabeca;
+                int xProximo = aux.getX()-20;
                 int yProximo = aux.getY();
                 while(i < tamanho){
                     if(i > 0){
-                        aux1 = 28;
+                        aux1 = 10;
                     }else{
                         aux1 = 0;
                     }
@@ -123,14 +129,14 @@ public class Board extends JPanel implements ActionListener {
                     i++;
                 }
                 break;
-    
+
                 case "direita":
                 aux = cabeca;
-                xProximo = aux.getX()+1;
+                xProximo = aux.getX()+20;
                 yProximo = aux.getY();
                 while(i < tamanho){
                     if(i > 0){
-                        aux1 = 28;
+                        aux1 = 10;
                     }else{
                         aux1 = 0;
                     }
@@ -143,14 +149,14 @@ public class Board extends JPanel implements ActionListener {
                     i++;
                 }
                 break;
-    
+
                 case "cima":
                 aux = cabeca;
                 xProximo = aux.getX();
-                yProximo = aux.getY()-1;
+                yProximo = aux.getY()-20;
                 while(i < tamanho){
                     if(i > 0){
-                        aux1 = 28;
+                        aux1 = 10;
                     }else{
                         aux1 = 0;
                     }
@@ -163,14 +169,14 @@ public class Board extends JPanel implements ActionListener {
                     i++;
                 }
                 break;
-    
+
                 case "baixo":
                 aux = cabeca;
                 xProximo = aux.getX();
-                yProximo = aux.getY()+1;
+                yProximo = aux.getY()+20;
                 while(i < tamanho){
                     if(i > 0){
-                        aux1 = 28;
+                        aux1 = 10;
                     }else{
                         aux1 = 0;
                     }
@@ -184,20 +190,36 @@ public class Board extends JPanel implements ActionListener {
                 }
                 break;
             }
-    
+
             //Verifica se a cabeca chegou na mesma posicao da comida, para o caso de alimentar a cobrinha e pontuar no score         
             if(((cabeca.getX() <= frita.getX()+35) && (cabeca.getX() >= frita.getX())) &&
-               ((cabeca.getY() <= frita.getY()+35) && (cabeca.getY() >= frita.getY()))){
+            ((cabeca.getY() <= frita.getY()+35) && (cabeca.getY() >= frita.getY()))){
                 frita = new Batata();
-                score.addScore(100);
+                score.addScore(1);
                 aCobrinhaComeu();
             }
-            
+
             //Verifica se relou nas bordas da Frame, para o caso de GAME OVER
-            if((cabeca.getX() == 0) || (cabeca.getX() == 770) || (cabeca.getY() == 0) || (cabeca.getY() == 570)){
+            if((cabeca.getX() < 0) || (cabeca.getX() > 770) || (cabeca.getY() < 0) || (cabeca.getY() > 570)){
                 gameOver = true;
             }
-            
+
+            //verifica o caso de colisão da cabeça com o corpo
+            if(tamanho > 3){
+                aux = cabeca.getProxima(); 
+                i = 0;
+                while(i < tamanho){
+                    if((cabeca.getX() == aux.getX())&&(cabeca.getY() == aux.getY())){
+                    /*if(((cabeca.getX() <= aux.getX()+25) && (cabeca.getX() >= aux.getX())) &&
+                       ((cabeca.getY() <= aux.getY()+25) && (cabeca.getY() >= aux.getY()))){*/
+                        gameOver = true;
+                        System.out.println("Relou");
+                        aux = aux.getProxima();
+                    }
+                    i++;
+                }
+            }
+
             repaint();  
         }
     }
@@ -223,6 +245,7 @@ public class Board extends JPanel implements ActionListener {
                 if(moverPara == "direita"){
                     break;
                 }else{
+                    cabeca.setImage("images/headEsq.png");
                     moverPara = "esquerda";
                     break;
                 }
@@ -231,6 +254,7 @@ public class Board extends JPanel implements ActionListener {
                 if(moverPara == "esquerda"){
                     break;
                 }else{
+                    cabeca.setImage("images/headDir.png");
                     moverPara = "direita";
                     break;
                 }
@@ -239,6 +263,7 @@ public class Board extends JPanel implements ActionListener {
                 if(moverPara == "baixo"){
                     break;
                 }else{
+                    cabeca.setImage("images/headCima.png");
                     moverPara = "cima";
                     break;
                 }
@@ -247,6 +272,7 @@ public class Board extends JPanel implements ActionListener {
                 if(moverPara == "cima"){
                     break;
                 }else{
+                    cabeca.setImage("images/headBaixo.png");
                     moverPara = "baixo";
                     break;
                 }
@@ -286,7 +312,7 @@ public class Board extends JPanel implements ActionListener {
             return false;
         }
     }
-    
+
     /*
      * Método executado quando a cobrinha come a batata
      * Aumenta a cobrinha
