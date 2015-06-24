@@ -23,9 +23,9 @@ public class Board extends JPanel implements ActionListener {
     private boolean gameOver = false;
     private Font font;
     public static String moverPara = "direita";
-//     private String bkg = "images/bkg.jpg";
-//     ImageIcon ii = new ImageIcon(this.getClass().getResource(bkg));
-//     Image image = ii.getImage();
+    //     private String bkg = "images/bkg.jpg";
+    //     ImageIcon ii = new ImageIcon(this.getClass().getResource(bkg));
+    //     Image image = ii.getImage();
 
     public Board() {
         addKeyListener(new TAdapter());
@@ -57,10 +57,8 @@ public class Board extends JPanel implements ActionListener {
         super.paint(g);
         score.paintComponent(g);
         Graphics2D g2d = (Graphics2D)g;      
-        
-        
-        //g2d.drawImage(image,0,0,this);
 
+        //g2d.drawImage(image,0,0,this);
         //adicionando imagens da cobrinha na tela
         int i = 0;
         int tamanho = tamanhoCobrinha();
@@ -104,96 +102,61 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    public void moveCorpo(int _x, int _y, int tamanho){
+        int xAtual, yAtual,xg,yg;
+        Snake aux = cabeca;
+        int i = 1;
+        xAtual = _x;
+            yAtual = _y;
+        while(i < tamanho){
+            
+            aux = aux.getProxima();
+            xg = aux.getX();
+            yg = aux.getY();
+            aux.moverPara(xAtual, yAtual);
+            xAtual = xg;
+            yAtual = yg;
+            i++;
+        }
+    }
+
     public void actionPerformed(ActionEvent e) {  
         if(!gameOver){
-            Snake aux, aux2;
             int tamanho = tamanhoCobrinha();
-            int i = 0, xAtual, yAtual, aux1 = 28;
+            int xAtual, yAtual;
             switch(moverPara){
                 case "esquerda":
-                aux = cabeca;
-                int xProximo = aux.getX()-20;
-                int yProximo = aux.getY();
-                while(i < tamanho){
-                    if(i > 0){
-                        aux1 = 10;
-                    }else{
-                        aux1 = 0;
-                    }
-                    xAtual = aux.getX();
-                    yAtual = aux.getY();
-                    aux.moverPara(xProximo+aux1, yProximo);
-                    xProximo = xAtual;
-                    yProximo = yAtual;
-                    aux = aux.getProxima();
-                    i++;
-                }
+                xAtual = cabeca.getX();
+                yAtual = cabeca.getY();
+                cabeca.mover(-20,0);
+                moveCorpo(xAtual,yAtual,tamanho);
                 break;
 
                 case "direita":
-                aux = cabeca;
-                xProximo = aux.getX()+20;
-                yProximo = aux.getY();
-                while(i < tamanho){
-                    if(i > 0){
-                        aux1 = 10;
-                    }else{
-                        aux1 = 0;
-                    }
-                    xAtual = aux.getX();
-                    yAtual = aux.getY();
-                    aux.moverPara(xProximo-aux1, yProximo);
-                    xProximo = xAtual;
-                    yProximo = yAtual;
-                    aux = aux.getProxima();
-                    i++;
-                }
+                xAtual = cabeca.getX();
+                yAtual = cabeca.getY();
+                cabeca.mover(20,0);
+                moveCorpo(xAtual,yAtual,tamanho);
                 break;
 
                 case "cima":
-                aux = cabeca;
-                xProximo = aux.getX();
-                yProximo = aux.getY()-20;
-                while(i < tamanho){
-                    if(i > 0){
-                        aux1 = 10;
-                    }else{
-                        aux1 = 0;
-                    }
-                    xAtual = aux.getX();
-                    yAtual = aux.getY();
-                    aux.moverPara(xProximo, yProximo+aux1);
-                    xProximo = xAtual;
-                    yProximo = yAtual;
-                    aux = aux.getProxima();
-                    i++;
-                }
+                xAtual = cabeca.getX();
+                yAtual = cabeca.getY();
+                cabeca.mover(0,-20);
+                moveCorpo(xAtual,yAtual,tamanho);
                 break;
 
                 case "baixo":
-                aux = cabeca;
-                xProximo = aux.getX();
-                yProximo = aux.getY()+20;
-                while(i < tamanho){
-                    if(i > 0){
-                        aux1 = 10;
-                    }else{
-                        aux1 = 0;
-                    }
-                    xAtual = aux.getX();
-                    yAtual = aux.getY();
-                    aux.moverPara(xProximo, yProximo-aux1);
-                    xProximo = xAtual;
-                    yProximo = yAtual;
-                    aux = aux.getProxima();
-                    i++;
-                }
+                xAtual = cabeca.getX();
+                yAtual = cabeca.getY();
+                cabeca.mover(0,20);
+                moveCorpo(xAtual,yAtual,tamanho);
                 break;
             }
 
             //Verifica se a cabeca chegou na mesma posicao da comida, para o caso de alimentar a cobrinha e pontuar no score         
-            if(((cabeca.getX() <= frita.getX()+35) && (cabeca.getX() >= frita.getX())) &&
-            ((cabeca.getY() <= frita.getY()+35) && (cabeca.getY() >= frita.getY()))){
+            if(((cabeca.getX() <= frita.getX()+20) && (cabeca.getX() >= frita.getX()-20)) &&
+            ((cabeca.getY() <= frita.getY()+20) && (cabeca.getY() >= frita.getY()-20))){
                 frita = new Batata();
                 score.addScore(1);
                 aCobrinhaComeu();
@@ -204,22 +167,20 @@ public class Board extends JPanel implements ActionListener {
                 gameOver = true;
             }
 
-            //verifica o caso de colisão da cabeça com o corpo
+            Snake aux;
+            int i = 1;
             if(tamanho > 3){
                 aux = cabeca.getProxima(); 
-                i = 0;
                 while(i < tamanho){
-                    if((cabeca.getX() == aux.getX())&&(cabeca.getY() == aux.getY())){
-                    /*if(((cabeca.getX() <= aux.getX()+25) && (cabeca.getX() >= aux.getX())) &&
-                       ((cabeca.getY() <= aux.getY()+25) && (cabeca.getY() >= aux.getY()))){*/
+                        if((    (cabeca.getX() <= aux.getX()+5) && (cabeca.getX() >= aux.getX()-5)     ) &&
+                           (    (cabeca.getY() <= aux.getY()+5) && (cabeca.getY() >= aux.getY()-5)     ) ){
                         gameOver = true;
-                        System.out.println("Relou");
-                        aux = aux.getProxima();
                     }
+                    aux = aux.getProxima();
                     i++;
                 }
             }
-
+            
             repaint();  
         }
     }
