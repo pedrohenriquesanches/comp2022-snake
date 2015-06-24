@@ -17,11 +17,11 @@ Uma vez criado o fork, basta começar a implementar, lembrando sempre de efetuar 
 Abaixo, segue uma lista com alguns aspectos para auxiliar na implementação do jogo.
 
 [x] Desenhar a cobra na tela.
-[ ] Movimentar a cobra na tela.
+[x] Movimentar a cobra na tela.
 [x] Desenhar a comida na tela.
-[ ] Criar controle para quando a cobra chegar nas bordas da tela, finalizar o jogo.
-[ ] Criar controle para quando a cobra se “comer”, finalizar o jogo.
-[ ] Criar a lista.
-[ ] Unir o controle da lista, com o comportamento da cobra.
-[ ] Adicionar a funcionalidade de pontuações com o comportamento da cobra.
-[ ] Testar, testar e testar!
+[x] Criar controle para quando a cobra chegar nas bordas da tela, finalizar o jogo.
+[x] Criar controle para quando a cobra se “comer”, finalizar o jogo.
+[x] Criar a lista.
+[x] Unir o controle da lista, com o comportamento da cobra.
+[x] Adicionar a funcionalidade de pontuações com o comportamento da cobra.
+[x] Testar, testar e testar!

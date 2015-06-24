@@ -35,8 +35,10 @@ public class Board extends JPanel implements ActionListener {
         //setBackground(Color.BLACK);
 
         score = new Score();
+        
         add(score);    
 
+        
         cabeca = new Snake();
         frita =  new Batata();
 
@@ -128,28 +130,28 @@ public class Board extends JPanel implements ActionListener {
                 case "esquerda":
                 xAtual = cabeca.getX();
                 yAtual = cabeca.getY();
-                cabeca.mover(-20,0);
+                cabeca.mover(-28,0);
                 moveCorpo(xAtual,yAtual,tamanho);
                 break;
 
                 case "direita":
                 xAtual = cabeca.getX();
                 yAtual = cabeca.getY();
-                cabeca.mover(20,0);
+                cabeca.mover(28,0);
                 moveCorpo(xAtual,yAtual,tamanho);
                 break;
 
                 case "cima":
                 xAtual = cabeca.getX();
                 yAtual = cabeca.getY();
-                cabeca.mover(0,-20);
+                cabeca.mover(0,-28);
                 moveCorpo(xAtual,yAtual,tamanho);
                 break;
 
                 case "baixo":
                 xAtual = cabeca.getX();
                 yAtual = cabeca.getY();
-                cabeca.mover(0,20);
+                cabeca.mover(0,28);
                 moveCorpo(xAtual,yAtual,tamanho);
                 break;
             }
